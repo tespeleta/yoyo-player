@@ -107,9 +107,9 @@ class _YoYoPlayerState extends State<YoYoPlayer>
   // video duration second
   double videoDurationSecond;
   //m3u8 data video list for user choice
-  List<M3U8pass> yoyo = List();
+  List<M3U8pass> yoyo = [];
   // m3u8 audio list
-  List<AUDIO> audioList = List();
+  List<AUDIO> audioList = [];
   // m3u8 temp data
   String m3u8Content;
   // subtitle temp data
@@ -216,7 +216,7 @@ class _YoYoPlayerState extends State<YoYoPlayer>
       aspectRatio: fullScreen
           ? calculateAspectRatio(context, screenSize)
           : widget.aspectRatio,
-      child: controller.value.initialized
+      child: controller.value.isInitialized
           ? Stack(children: videoChildren)
           : widget.videoLoadingStyle.loading,
     );
@@ -404,7 +404,8 @@ class _YoYoPlayerState extends State<YoYoPlayer>
       },
     );
     if (m3u8Content == null && video != null) {
-      http.Response response = await http.get(video);
+      final videoUrl = Uri.parse(video);
+      http.Response response = await http.get(videoUrl);
       if (response.statusCode == 200) {
         m3u8Content = utf8.decode(response.bodyBytes);
       }
@@ -484,8 +485,8 @@ class _YoYoPlayerState extends State<YoYoPlayer>
 
 // video Listener
   void listener() async {
-    if (controller.value.initialized && controller.value.isPlaying) {
-      if (!await Wakelock.isEnabled) {
+    if (controller.value.isInitialized && controller.value.isPlaying) {
+      if (!await Wakelock.enabled) {
         await Wakelock.enable();
       }
       setState(() {
@@ -495,7 +496,7 @@ class _YoYoPlayerState extends State<YoYoPlayer>
         videoDurationSecond = controller.value.duration.inSeconds.toDouble();
       });
     } else {
-      if (await Wakelock.isEnabled) {
+      if (await Wakelock.enabled) {
         await Wakelock.disable();
         setState(() {});
       }
