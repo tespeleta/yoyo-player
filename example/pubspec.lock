@@ -201,10 +201,12 @@ packages:
   screen:
     dependency: transitive
     description:
-      name: screen
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.0.5"
+      path: "."
+      ref: HEAD
+      resolved-ref: d3f6f60ac1d24b74526e7f51e6f7dbacd45fcfc2
+      url: "https://github.com/tespeleta/flutter_screen.git"
+    source: git
+    version: "0.0.6"
   sky_engine:
     dependency: transitive
     description: flutter
